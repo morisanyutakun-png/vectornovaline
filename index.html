@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Product+Sans:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
+    /* ===== Body ===== */
     body {
       font-family: 'Roboto', sans-serif;
       background: linear-gradient(135deg, #e8f0fe, #f1f3f4);
@@ -21,70 +22,76 @@
       padding: 20px;
     }
 
+    /* ===== Form Card ===== */
     .form-card {
-      background-color: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-      padding: 40px 30px;
-      max-width: 420px;
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      padding: 50px 40px;
+      max-width: 440px;
       width: 100%;
       text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .form-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.18);
     }
 
+    /* ===== Logo ===== */
     .google-logo {
       display: block;
-      margin: 0 auto 20px auto;
-      width: 120px;
+      margin: 0 auto 25px auto;
+      width: 130px;
     }
 
+    /* ===== Heading ===== */
     h1 {
       font-family: 'Product Sans', sans-serif;
       font-weight: 500;
-      font-size: 2rem;
-      margin-bottom: 20px;
+      font-size: 2.2rem;
+      margin-bottom: 25px;
       color: #202124;
     }
 
+    /* ===== Notice ===== */
     .notice {
       font-size: 1rem;
-      line-height: 1.6;
+      line-height: 1.7;
       background: #f8f9fa;
-      padding: 15px 20px;
-      border-radius: 10px;
-      margin-bottom: 30px;
+      padding: 18px 22px;
+      border-radius: 12px;
+      margin-bottom: 40px;
       color: #202124;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
       text-align: left;
     }
 
+    /* ===== Button ===== */
     #openFormBtn {
       font-family: 'Product Sans', sans-serif;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 500;
-      padding: 14px 28px;
+      padding: 16px 32px;
       color: #fff;
-      background-color: #1a73e8;
+      background: linear-gradient(135deg, #4285f4, #1a73e8);
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
+      transition: all 0.2s ease;
+      margin: 0 auto; /* 中央揃え */
     }
 
     #openFormBtn:hover:not(:disabled) {
-      background-color: #1669c1;
+      background: linear-gradient(135deg, #357ae8, #1669c1);
       transform: translateY(-1px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
     }
 
     #openFormBtn:disabled {
@@ -94,16 +101,17 @@
     }
 
     .btn-icon {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
     }
 
+    /* ===== Responsive ===== */
     @media screen and (max-width: 480px) {
-      .form-card { padding: 30px 20px; }
-      h1 { font-size: 1.6rem; }
-      .notice { font-size: 0.95rem; padding: 12px 15px; }
-      #openFormBtn { font-size: 0.95rem; padding: 12px 20px; }
-      .google-logo { width: 100px; }
+      .form-card { padding: 35px 25px; }
+      h1 { font-size: 1.8rem; }
+      .notice { font-size: 0.95rem; padding: 14px 16px; }
+      #openFormBtn { font-size: 1rem; padding: 14px 24px; gap: 8px; }
+      .google-logo { width: 110px; }
     }
   </style>
 </head>
@@ -155,14 +163,12 @@
         return;
       }
 
-      // LINEアプリ内ブラウザの場合
       if (liff.isInClient() && liff.isApiAvailable('openWindow')) {
         liff.openWindow({
           url: `${formBaseUrl}?entry.1260928672=${userId}`,
           external: true
         });
       } else {
-        // 通常ブラウザでは直接遷移
         window.location.href = `${formBaseUrl}?entry.1260928672=${userId}`;
       }
 
