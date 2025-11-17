@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>添削依頼フォーム（LINE自動入力）</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==================== 基本 ==================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Roboto', sans-serif;
       background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
@@ -16,56 +20,91 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
-      padding: 20px;
+      min-height: 100vh;
       text-align: center;
+      padding: 20px;
     }
 
+    /* ==================== ヘッダー ==================== */
     h1 {
-      font-size: 2.2rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
       margin-bottom: 20px;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
     }
 
-    p.notice {
-      background: rgba(0,0,0,0.2);
-      padding: 15px 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      font-weight: bold;
-      max-width: 400px;
+    .notice {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      background: rgba(0,0,0,0.25);
+      padding: 20px;
+      border-radius: 15px;
+      max-width: 450px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
+    /* ==================== ボタン ==================== */
     #openFormBtn {
-      padding: 20px 50px;
-      font-size: 1.3rem;
-      font-weight: bold;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      padding: 20px 60px;
       color: #fff;
       background: linear-gradient(45deg, #ff416c, #ff4b2b);
       border: none;
-      border-radius: 15px;
+      border-radius: 20px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #openFormBtn::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -75%;
+      width: 50%; height: 100%;
+      background: rgba(255,255,255,0.3);
+      transform: skewX(-25deg);
+      transition: all 0.5s ease;
+    }
+
+    #openFormBtn:hover::after {
+      left: 125%;
     }
 
     #openFormBtn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.35);
     }
 
     #openFormBtn:disabled {
       background: #aaa;
       cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* ==================== レスポンシブ ==================== */
+    @media screen and (max-width: 768px) {
+      h1 { font-size: 2.2rem; }
+      .notice { font-size: 1rem; padding: 15px; }
+      #openFormBtn { font-size: 1.3rem; padding: 18px 50px; }
     }
   </style>
 </head>
 <body>
+
   <h1>添削依頼フォームを開く</h1>
   <p class="notice">
-    このボタンを押すと、あなたのLINE IDが自動入力されます。<br>
-    LINE IDは編集できませんのでご注意ください。
+    このボタンを押すと、LINE IDが自動入力されたGoogleフォームに遷移します。<br>
+    LINE IDは編集せず、そのままにしてください。
   </p>
+
   <button id="openFormBtn">フォームを開く</button>
 
   <script>
@@ -73,37 +112,37 @@
     const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfcKsxo_YtSGhGIXrJcAOwXmezlt8_49Fd8CGrn3zLzPXbKFQ/viewform";
     let userId = null;
 
-    // LIFF 初期化
+    // LIFF初期化
     liff.init({ liffId })
       .then(() => {
         if (!liff.isLoggedIn()) liff.login();
         return liff.getProfile();
       })
       .then(profile => {
-        if (profile) userId = encodeURIComponent(profile.userId);
+        if(profile) userId = encodeURIComponent(profile.userId);
       })
       .catch(err => console.error('LIFF初期化失敗:', err));
 
-    // ボタン押下
     const btn = document.getElementById('openFormBtn');
     btn.addEventListener('click', () => {
-      if (!userId) {
+      if(!userId) {
         alert('LINE ID がまだ取得できていません。少し待ってからもう一度押してください。');
         return;
       }
 
       // ユーザー操作直後に新しいウィンドウで開く
       const newWindow = window.open("", "_blank");
-      if (!newWindow) {
+      if(!newWindow) {
         alert('ポップアップブロックされています。ブラウザの設定で許可してください。');
         return;
       }
       newWindow.location.href = `${formBaseUrl}?entry.1260928672=${userId}`;
 
-      // 押した後にボタンを無効化して再押不可に
+      // ボタン無効化＆文言変更
       btn.disabled = true;
       btn.textContent = "LINE ID 自動入力済み、フォームを確認してください";
     });
   </script>
+
 </body>
 </html>
