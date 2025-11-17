@@ -4,46 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>添削依頼フォーム（LINE自動入力）</title>
-  <!-- LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h1 { color: #333; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
-    p { max-width: 500px; }
-  </style>
 </head>
 <body>
   <h1>添削依頼フォームを開く</h1>
-  <p>ボタンを押すと、LINE IDが自動入力されたGoogleフォームが新しいタブで開きます。</p>
-  <button id="openFormBtn">フォームを開く</button>
+  <button id="openFormBtn" disabled>フォームを開く</button>
 
   <script>
-    const liffId = "2008513285-MXPvDQ88"; // あなたのLIFF ID
+    const liffId = "2008513285-MXPvDQ88";
     const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfcKsxo_YtSGhGIXrJcAOwXmezlt8_49Fd8CGrn3zLzPXbKFQ/viewform";
+    let userId = null;
 
     // LIFF 初期化
     liff.init({ liffId })
       .then(() => {
         if (!liff.isLoggedIn()) {
-          liff.login(); // ログインしていなければ促す
+          liff.login();
+        } else {
+          return liff.getProfile();
         }
       })
-      .catch(err => console.error('LIFF初期化失敗:', err));
+      .then(profile => {
+        if (profile) {
+          userId = encodeURIComponent(profile.userId);
+          document.getElementById('openFormBtn').disabled = false; // ボタン有効化
+        }
+      })
+      .catch(err => console.error(err));
 
     // ボタン押下でフォームを開く
     document.getElementById('openFormBtn').addEventListener('click', () => {
-      liff.getProfile()
-        .then(profile => {
-          const userId = encodeURIComponent(profile.userId); // LINE IDをURLエンコード
-          // GoogleフォームのURLにLINE IDをクエリパラメータで渡す
-          const url = `${formBaseUrl}?entry.1260928672=${userId}`;
-          window.open(url, "_blank"); // 新しいタブで開く
-        })
-        .catch(err => {
-          console.error('プロフィール取得失敗:', err);
-          alert('LINEプロフィールを取得できませんでした。もう一度お試しください。');
-        });
+      if (!userId) {
+        alert('LINE ID が取得できていません。');
+        return;
+      }
+      // ここでは同期的に window.open() を呼ぶ
+      const url = `${formBaseUrl}?entry.1260928672=${userId}`;
+      window.open(url, "_blank");
     });
   </script>
 </body>
