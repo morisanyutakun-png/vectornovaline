@@ -3,45 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>質問・添削依頼フォーム</title>
+  <title>添削依頼フォーム（LINE自動入力）</title>
   <!-- LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-  <h1>添削依頼フォーム</h1>
-
-  <form id="myForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfcKsxo_YtSGhGIXrJcAOwXmezlt8_49Fd8CGrn3zLzPXbKFQ/formResponse" method="POST" target="_blank">
-    <!-- userId 用 hidden -->
-    <input type="hidden" name="entry.1260928672" id="userId">
-
-    <!-- 質問内容 -->
-    <label for="question">質問内容:</label><br>
-    <textarea name="entry.894864933" id="question" rows="4" cols="50" required></textarea><br><br>
-
-    <button type="submit">送信</button>
-  </form>
+  <h1>添削依頼フォームを開く</h1>
+  <p>ボタンを押すと、LINE IDが自動入力されたGoogleフォームが開きます。</p>
+  <button id="openFormBtn">フォームを開く</button>
 
   <script>
-    const liffId = "2008513285-MXPvDQ88";
+    const liffId = "2008513285-MXPvDQ88"; // あなたのLIFF ID
+    const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfcKsxo_YtSGhGIXrJcAOwXmezlt8_49Fd8CGrn3zLzPXbKFQ/viewform";
 
     // LIFF 初期化
     liff.init({ liffId })
       .then(() => {
         if (!liff.isLoggedIn()) {
-          liff.login(); // ログインしていなければログイン
-        } else {
-          liff.getProfile()
-            .then(profile => {
-              document.getElementById('userId').value = profile.userId;
-            })
-            .catch(err => console.error('プロフィール取得失敗:', err));
+          liff.login();
         }
       })
       .catch(err => console.error('LIFF初期化失敗:', err));
 
-    // 送信時にアラート（任意）
-    document.getElementById('myForm').addEventListener('submit', () => {
-      alert('フォームが送信されました！');
+    // ボタン押下でフォームを開く
+    document.getElementById('openFormBtn').addEventListener('click', () => {
+      liff.getProfile()
+        .then(profile => {
+          const userId = encodeURIComponent(profile.userId); // LINE IDをURLエンコード
+          const url = `${formBaseUrl}?entry.1260928672=${userId}`; // entry.1260928672はLINE ID用の質問
+          window.open(url, "_blank"); // 新しいタブで開く
+        })
+        .catch(err => console.error('プロフィール取得失敗:', err));
     });
   </script>
 </body>
