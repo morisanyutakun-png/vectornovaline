@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>質問・添削依頼フォーム</title>
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <h1>添削依頼フォーム</h1>
+
+  <form id="myForm" action="https://docs.google.com/forms/d/e/【ここにGoogleフォームID】/formResponse" method="POST" target="_blank">
+    <!-- userId 用 hidden -->
+    <input type="hidden" name="entry.1260928672" id="userId">
+
+    <!-- 質問内容 -->
+    <label for="question">質問内容:</label><br>
+    <textarea name="entry.894864933" id="question" rows="4" cols="50" required></textarea><br><br>
+
+    <button type="submit">送信</button>
+  </form>
+
+  <script>
+    const liffId = "2008513285-MXPvDQ88";
+
+    // LIFF 初期化
+    liff.init({ liffId })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login(); // ログインしていなければログイン
+        } else {
+          liff.getProfile()
+            .then(profile => {
+              document.getElementById('userId').value = profile.userId;
+            })
+            .catch(err => console.error('プロフィール取得失敗:', err));
+        }
+      })
+      .catch(err => console.error('LIFF初期化失敗:', err));
+
+    // 送信時にアラート（任意）
+    document.getElementById('myForm').addEventListener('submit', () => {
+      alert('フォームが送信されました！');
+    });
+  </script>
+</body>
+</html>
