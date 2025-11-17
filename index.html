@@ -12,36 +12,23 @@
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #f8f9fa;
+      background-color: #f1f3f4;
       color: #202124;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
       padding: 20px;
+    }
+
+    .form-card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      padding: 40px 30px;
+      max-width: 420px;
+      width: 100%;
       text-align: center;
-    }
-
-    h1 {
-      font-family: 'Product Sans', sans-serif;
-      font-weight: 500;
-      font-size: 2rem;
-      margin-bottom: 20px;
-      color: #202124;
-    }
-
-    .notice {
-      background: #fff;
-      border: 1px solid #dadce0;
-      border-radius: 8px;
-      padding: 20px;
-      max-width: 400px;
-      margin-bottom: 30px;
-      font-size: 1rem;
-      line-height: 1.5;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      text-align: left;
     }
 
     .google-logo {
@@ -50,23 +37,44 @@
       width: 120px;
     }
 
+    h1 {
+      font-family: 'Product Sans', sans-serif;
+      font-weight: 500;
+      font-size: 1.9rem;
+      margin-bottom: 25px;
+      color: #202124;
+    }
+
+    .notice {
+      font-size: 1rem;
+      line-height: 1.6;
+      background: #f8f9fa;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      color: #202124;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+      text-align: left;
+    }
+
     #openFormBtn {
       font-family: 'Product Sans', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 500;
-      padding: 12px 24px;
+      padding: 12px 25px;
       color: #fff;
       background-color: #1a73e8;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-      transition: background-color 0.2s, transform 0.1s;
+      transition: all 0.2s ease;
     }
 
     #openFormBtn:hover {
       background-color: #1669c1;
       transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
     }
 
     #openFormBtn:disabled {
@@ -76,25 +84,27 @@
     }
 
     @media screen and (max-width: 480px) {
+      .form-card { padding: 30px 20px; }
       h1 { font-size: 1.6rem; }
-      .notice { font-size: 0.95rem; padding: 15px; }
-      #openFormBtn { font-size: 1rem; padding: 10px 20px; }
+      .notice { font-size: 0.95rem; padding: 12px 15px; }
+      #openFormBtn { font-size: 0.95rem; padding: 10px 20px; }
       .google-logo { width: 100px; }
     }
   </style>
 </head>
 <body>
 
-  <img src="https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png" alt="Google" class="google-logo">
+  <div class="form-card">
+    <img src="https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png" alt="Google" class="google-logo">
+    <h1>添削依頼フォーム</h1>
 
-  <h1>添削依頼フォームを開く</h1>
+    <p class="notice">
+      このボタンを押すと、LINE IDが自動入力されたGoogleフォームに遷移します。<br>
+      LINE IDは編集せず、そのままにしてください。
+    </p>
 
-  <p class="notice">
-    このボタンを押すと、LINE IDが自動入力されたGoogleフォームに遷移します。<br>
-    LINE IDは編集せず、そのままにしてください。
-  </p>
-
-  <button id="openFormBtn">フォームを開く</button>
+    <button id="openFormBtn">フォームを開く</button>
+  </div>
 
   <script>
     const liffId = "2008513285-MXPvDQ88";
