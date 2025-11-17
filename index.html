@@ -5,101 +5,158 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>添削依頼フォーム（LINE自動入力）</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Product+Sans:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #e8f0fe, #f1f3f4);
+      background-color: #f1f3f4;
+      color: #202124;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      margin: 0;
       padding: 20px;
     }
+
     .form-card {
       background-color: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       padding: 40px 30px;
       max-width: 420px;
       width: 100%;
       text-align: center;
     }
-    .google-logo { display: block; margin: 0 auto 20px auto; width: 120px; }
-    h1 { font-family: 'Product Sans', sans-serif; font-weight: 500; font-size: 2rem; margin-bottom: 20px; color: #202124; }
-    .notice {
-      font-size: 1rem; line-height: 1.6; background: #f8f9fa; padding: 15px 20px;
-      border-radius: 10px; margin-bottom: 30px; color: #202124;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); text-align: left;
+
+    .google-logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      width: 120px;
     }
+
+    h1 {
+      font-family: 'Product Sans', sans-serif;
+      font-weight: 500;
+      font-size: 1.9rem;
+      margin-bottom: 25px;
+      color: #202124;
+    }
+
+    .notice {
+      font-size: 1rem;
+      line-height: 1.6;
+      background: #f8f9fa;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      color: #202124;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+      text-align: left;
+    }
+
     #openFormBtn {
       font-family: 'Product Sans', sans-serif;
-      font-size: 1rem; font-weight: 500; padding: 14px 28px; color: #fff;
-      background-color: #1a73e8; border: none; border-radius: 8px; cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.2s ease;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 12px 25px;
+      color: #fff;
+      background-color: #1a73e8;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
     }
-    #openFormBtn:hover:not(:disabled) { background-color: #1669c1; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.25); }
-    #openFormBtn:disabled { background-color: #bbb; cursor: not-allowed; box-shadow: none; }
-    .btn-icon { width: 18px; height: 18px; }
+
+    #openFormBtn:hover {
+      background-color: #1669c1;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+
+    #openFormBtn:disabled {
+      background-color: #bbb;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    @media screen and (max-width: 480px) {
+      .form-card { padding: 30px 20px; }
+      h1 { font-size: 1.6rem; }
+      .notice { font-size: 0.95rem; padding: 12px 15px; }
+      #openFormBtn { font-size: 0.95rem; padding: 10px 20px; }
+      .google-logo { width: 100px; }
+    }
   </style>
 </head>
 <body>
 
-<div class="form-card">
-  <img src="https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png" alt="Google" class="google-logo">
-  <h1>添削依頼フォーム</h1>
-  <p class="notice">このボタンを押すと、LINE IDが自動入力されたGoogleフォームに遷移します。LINE IDは編集せず、そのままにしてください。</p>
-  <button id="openFormBtn" disabled>
-    <img src="https://www.gstatic.com/images/icons/material/system/1x/open_in_new_black_18dp.png" class="btn-icon"> 読み込み中...
-  </button>
-</div>
+  <div class="form-card">
+    <img src="https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png" alt="Google" class="google-logo">
+    <h1>添削依頼フォーム</h1>
 
-<script>
-const liffId = "2008513285-MXPvDQ88";
-const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfcKsxo_YtSGhGIXrJcAOwXmezlt8_49Fd8CGrn3zLzPXbKFQ/viewform";
-let userId = null;
+    <p class="notice">
+      このボタンを押すと、LINE IDが自動入力されたGoogleフォームに遷移します。<br>
+      LINE IDは編集せず、そのままにしてください。
+    </p>
 
-// LIFF初期化
-async function initLiff() {
-  try {
-    await liff.init({ liffId });
-    if (!liff.isLoggedIn()) await liff.login();
+    <button id="openFormBtn" disabled>読み込み中...</button>
+  </div>
 
-    const profile = await liff.getProfile();
-    if (profile) {
-      userId = encodeURIComponent(profile.userId);
-      const btn = document.getElementById('openFormBtn');
-      btn.disabled = false;
-      btn.innerHTML = `<img src="https://www.gstatic.com/images/icons/material/system/1x/open_in_new_black_18dp.png" class="btn-icon"> フォームを開く`;
+  <script>
+    const liffId = "2008513285-MXPvDQ88";
+    const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfcKsxo_YtSGhGIXrJcAOwXmezlt8_49Fd8CGrn3zLzPXbKFQ/viewform";
+    let userId = null;
+
+    async function initLiff() {
+      try {
+        await liff.init({ liffId });
+
+        if (!liff.isLoggedIn()) {
+          await liff.login();
+        }
+
+        const profile = await liff.getProfile();
+        if (profile) {
+          userId = encodeURIComponent(profile.userId);
+          const btn = document.getElementById('openFormBtn');
+          btn.disabled = false;
+          btn.textContent = "フォームを開く";
+        }
+
+      } catch (err) {
+        console.error('LIFF初期化失敗:', err);
+        const btn = document.getElementById('openFormBtn');
+        btn.textContent = "読み込み失敗、再読み込みしてください";
+      }
     }
-  } catch (err) {
-    console.error('LIFF初期化失敗:', err);
-    const btn = document.getElementById('openFormBtn');
-    btn.textContent = "読み込み失敗、再読み込みしてください";
-  }
-}
 
-// ボタンクリック時
-document.getElementById('openFormBtn').addEventListener('click', () => {
-  if (!userId) { alert('LINE ID がまだ取得できていません。少し待ってからもう一度押してください。'); return; }
+    document.getElementById('openFormBtn').addEventListener('click', () => {
+      if (!userId) {
+        alert('LINE ID がまだ取得できていません。少し待ってからもう一度押してください。');
+        return;
+      }
 
-  // LINE内ブラウザなら liff.openWindow で外部遷移
-  if (liff.isApiAvailable('openWindow')) {
-    liff.openWindow({ url: `${formBaseUrl}?entry.1260928672=${userId}`, external: true });
-  } else {
-    // 外部ブラウザ用
-    window.location.href = `${formBaseUrl}?entry.1260928672=${userId}`;
-  }
+      // ユーザー操作直後に新しいウィンドウを開く
+      const newWindow = window.open("", "_blank");
+      if (!newWindow) {
+        alert('ポップアップブロックされています。ブラウザの設定で許可してください。');
+        return;
+      }
 
-  const btn = document.getElementById('openFormBtn');
-  btn.disabled = true;
-  btn.textContent = "LINE ID 自動入力済み、フォームを確認してください";
-});
+      newWindow.location.href = `${formBaseUrl}?entry.1260928672=${userId}`;
 
-initLiff();
-</script>
+      const btn = document.getElementById('openFormBtn');
+      btn.disabled = true;
+      btn.textContent = "LINE ID 自動入力済み、フォームを確認してください";
+    });
+
+    // 初期化実行
+    initLiff();
+  </script>
 
 </body>
 </html>
