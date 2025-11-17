@@ -85,7 +85,8 @@
       justify-content: center;
       gap: 10px;
       transition: all 0.2s ease;
-      margin: 0 auto; /* 中央揃え */
+      margin: 0 auto;
+      position: relative;
     }
 
     #openFormBtn:hover:not(:disabled) {
@@ -100,9 +101,30 @@
       box-shadow: none;
     }
 
+    #openFormBtn:active:not(:disabled) {
+      background-color: #999;
+      transform: translateY(0);
+    }
+
     .btn-icon {
       width: 20px;
       height: 20px;
+    }
+
+    /* ===== Spinner ===== */
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #666;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* ===== Responsive ===== */
@@ -112,6 +134,7 @@
       .notice { font-size: 0.95rem; padding: 14px 16px; }
       #openFormBtn { font-size: 1rem; padding: 14px 24px; gap: 8px; }
       .google-logo { width: 110px; }
+      .spinner { width: 16px; height: 16px; border-width: 2.5px; }
     }
   </style>
 </head>
@@ -127,8 +150,11 @@
     </p>
 
     <button id="openFormBtn" disabled>
-      <img src="https://www.gstatic.com/images/icons/material/system/1x/open_in_new_black_18dp.png" class="btn-icon">
-      読み込み中...
+      <span class="btn-text">
+        <img src="https://www.gstatic.com/images/icons/material/system/1x/open_in_new_black_18dp.png" class="btn-icon">
+        読み込み中...
+      </span>
+      <span class="spinner" style="display:none;"></span>
     </button>
   </div>
 
@@ -148,7 +174,8 @@
           userId = encodeURIComponent(profile.userId);
           const btn = document.getElementById('openFormBtn');
           btn.disabled = false;
-          btn.innerHTML = `<img src="https://www.gstatic.com/images/icons/material/system/1x/open_in_new_black_18dp.png" class="btn-icon"> フォームを開く`;
+          btn.querySelector('.btn-text').innerHTML =
+            '<img src="https://www.gstatic.com/images/icons/material/system/1x/open_in_new_black_18dp.png" class="btn-icon"> フォームを開く';
         }
       } catch (err) {
         console.error('LIFF初期化失敗:', err);
@@ -163,18 +190,22 @@
         return;
       }
 
-      if (liff.isInClient() && liff.isApiAvailable('openWindow')) {
-        liff.openWindow({
-          url: `${formBaseUrl}?entry.1260928672=${userId}`,
-          external: true
-        });
-      } else {
-        window.location.href = `${formBaseUrl}?entry.1260928672=${userId}`;
-      }
-
       const btn = document.getElementById('openFormBtn');
+      const spinner = btn.querySelector('.spinner');
+      const text = btn.querySelector('.btn-text');
+
+      // 表示切り替え
+      spinner.style.display = 'inline-block';
+      text.style.opacity = '0.5';
       btn.disabled = true;
-      btn.textContent = "LINE ID 自動入力済み、フォームを確認してください";
+
+      const targetUrl = `${formBaseUrl}?entry.1260928672=${userId}`;
+
+      if (liff.isInClient() && liff.isApiAvailable('openWindow')) {
+        liff.openWindow({ url: targetUrl, external: true });
+      } else {
+        window.location.href = targetUrl;
+      }
     });
 
     initLiff();
