@@ -6,10 +6,16 @@
   <title>添削依頼フォーム（LINE自動入力）</title>
   <!-- LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { color: #333; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    p { max-width: 500px; }
+  </style>
 </head>
 <body>
   <h1>添削依頼フォームを開く</h1>
-  <p>ボタンを押すと、LINE IDが自動入力されたGoogleフォームが開きます。</p>
+  <p>ボタンを押すと、LINE IDが自動入力されたGoogleフォームが新しいタブで開きます。</p>
   <button id="openFormBtn">フォームを開く</button>
 
   <script>
@@ -20,7 +26,7 @@
     liff.init({ liffId })
       .then(() => {
         if (!liff.isLoggedIn()) {
-          liff.login();
+          liff.login(); // ログインしていなければ促す
         }
       })
       .catch(err => console.error('LIFF初期化失敗:', err));
@@ -30,10 +36,14 @@
       liff.getProfile()
         .then(profile => {
           const userId = encodeURIComponent(profile.userId); // LINE IDをURLエンコード
-          const url = `${formBaseUrl}?entry.1260928672=${userId}`; // entry.1260928672はLINE ID用の質問
+          // GoogleフォームのURLにLINE IDをクエリパラメータで渡す
+          const url = `${formBaseUrl}?entry.1260928672=${userId}`;
           window.open(url, "_blank"); // 新しいタブで開く
         })
-        .catch(err => console.error('プロフィール取得失敗:', err));
+        .catch(err => {
+          console.error('プロフィール取得失敗:', err);
+          alert('LINEプロフィールを取得できませんでした。もう一度お試しください。');
+        });
     });
   </script>
 </body>
